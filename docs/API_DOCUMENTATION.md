@@ -5,8 +5,10 @@ Comprehensive technical reference for Aviator REST API endpoints and real-time S
 ---
 
 ## 🌐 1. Base URLs
-- **REST API Base:** `http://localhost:5000/api`
-- **WebSocket Gateway:** `ws://localhost:5000`
+- **Production REST API Base:** `https://aviator-game-pro.onrender.com/api`
+- **Production Socket.io Gateway:** `https://aviator-game-pro.onrender.com` (secure WebSocket / HTTPS polling)
+- **Local development REST API Base:** `http://localhost:5000/api`
+- **Local development Socket.io Gateway:** `http://localhost:5000`
 
 ---
 

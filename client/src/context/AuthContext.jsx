@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { apiUrl } from '../api';
 
 const AuthContext = createContext(null);
 
@@ -10,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      fetch('/api/auth/me', {
+      fetch(apiUrl('/api/auth/me'), {
         headers: { Authorization: `Bearer ${token}` }
       })
         .then(res => res.json())
@@ -36,7 +37,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (identifier, password) => {
-    const res = await fetch('/api/auth/login', {
+    const res = await fetch(apiUrl('/api/auth/login'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ identifier, password })
@@ -49,7 +50,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (username, email, password) => {
-    const res = await fetch('/api/auth/register', {
+    const res = await fetch(apiUrl('/api/auth/register'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, email, password })
@@ -63,7 +64,7 @@ export const AuthProvider = ({ children }) => {
 
   const demoLogin = async () => {
     try {
-      const res = await fetch('/api/auth/demo-login', { method: 'POST' });
+      const res = await fetch(apiUrl('/api/auth/demo-login'), { method: 'POST' });
       const data = await res.json();
       if (data.success) {
         saveAuth(data.token, data.user);
@@ -76,7 +77,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const adminLogin = async () => {
-    const res = await fetch('/api/auth/admin-login', { method: 'POST' });
+    const res = await fetch(apiUrl('/api/auth/admin-login'), { method: 'POST' });
     const data = await res.json();
     if (data.success) {
       saveAuth(data.token, data.user);

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, ShieldCheck, CheckCircle2, Calculator, Hash, Key, RefreshCw } from 'lucide-react';
+import { apiUrl } from '../api';
 
 const ProvablyFairModal = ({ isOpen, onClose, selectedRound }) => {
   const [serverSeed, setServerSeed] = useState('');
@@ -28,7 +29,7 @@ const ProvablyFairModal = ({ isOpen, onClose, selectedRound }) => {
     setError(null);
 
     try {
-      const res = await fetch('/api/game/verify', {
+      const res = await fetch(apiUrl('/api/game/verify'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

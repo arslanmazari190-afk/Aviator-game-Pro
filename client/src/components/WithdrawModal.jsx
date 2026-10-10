@@ -4,6 +4,7 @@ import {
   Building2, Coins, AlertCircle, Wallet 
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { apiUrl } from '../api';
 
 const WithdrawModal = ({ isOpen, onClose }) => {
   const { user, token, currency, updateBalanceLocally } = useAuth();
@@ -43,7 +44,7 @@ const WithdrawModal = ({ isOpen, onClose }) => {
         throw new Error('Please provide your receiving account number / address.');
       }
 
-      const res = await fetch('/api/wallet/withdraw', {
+      const res = await fetch(apiUrl('/api/wallet/withdraw'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGame } from '../context/GameSocketContext';
 import { useAuth } from '../context/AuthContext';
+import { apiUrl } from '../api';
 import { Users, UserCheck, Trophy, ArrowUpRight, Flame } from 'lucide-react';
 
 const LiveBetsSidebar = () => {
@@ -12,7 +13,7 @@ const LiveBetsSidebar = () => {
   // Fetch user personal bets history
   useEffect(() => {
     if (activeTab === 'MY' && token) {
-      fetch('/api/game/my-bets', {
+      fetch(apiUrl('/api/game/my-bets'), {
         headers: { Authorization: `Bearer ${token}` }
       })
         .then(res => res.json())

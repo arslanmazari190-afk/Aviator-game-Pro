@@ -9,15 +9,15 @@ export default defineConfig({
     host: true,
     proxy: {
       '/api': {
-        target: 'https://aviator-game-pro.onrender.com',
+        target: 'http://localhost:5000',
         changeOrigin: true,
       },
       '/socket.io': {
-        target: 'https://aviator-game-pro.onrender.com',
+        target: 'http://localhost:5000',
         ws: true,
       },
       '/uploads': {
-        target: 'https://aviator-game-pro.onrender.com',
+        target: 'http://localhost:5000',
         changeOrigin: true,
       }
     }

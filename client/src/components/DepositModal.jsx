@@ -4,6 +4,7 @@ import {
   Smartphone, Building2, Coins, ShieldCheck, AlertCircle 
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { apiUrl } from '../api';
 
 const DepositModal = ({ isOpen, onClose }) => {
   const { user, token, currency, updateBalanceLocally } = useAuth();
@@ -57,7 +58,7 @@ const DepositModal = ({ isOpen, onClose }) => {
         formData.append('receipt', receiptFile);
       }
 
-      const res = await fetch('/api/wallet/deposit', {
+      const res = await fetch(apiUrl('/api/wallet/deposit'), {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData

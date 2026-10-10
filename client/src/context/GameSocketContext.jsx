@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 import confetti from 'canvas-confetti';
+import { API_BASE_URL } from '../api';
 import { useAuth } from './AuthContext';
 import { useSound } from './SoundContext';
 
@@ -28,7 +29,7 @@ export const GameSocketProvider = ({ children }) => {
 
   useEffect(() => {
     // Connect to WebSocket server
-    const socketInstance = io(window.location.origin, {
+    const socketInstance = io(API_BASE_URL, {
       transports: ['websocket', 'polling'],
       reconnectionAttempts: 10,
       reconnectionDelay: 1000

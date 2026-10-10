@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useGame } from '../context/GameSocketContext';
+import { apiUrl } from '../api';
 
 const AdminDashboard = ({ onClose }) => {
   const { token, user } = useAuth();
@@ -40,10 +41,10 @@ const AdminDashboard = ({ onClose }) => {
     try {
       setLoading(true);
       const [resStats, resUsers, resTxs, resSettings] = await Promise.all([
-        fetch('/api/admin/dashboard', { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()),
-        fetch('/api/admin/users', { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()),
-        fetch('/api/admin/transactions', { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()),
-        fetch('/api/admin/settings', { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json())
+        fetch(apiUrl('/api/admin/dashboard'), { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()),
+        fetch(apiUrl('/api/admin/users'), { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()),
+        fetch(apiUrl('/api/admin/transactions'), { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()),
+        fetch(apiUrl('/api/admin/settings'), { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json())
       ]);
 
       if (resStats.success) setStats(resStats.stats);
@@ -69,7 +70,7 @@ const AdminDashboard = ({ onClose }) => {
   // 1. Approve Transaction
   const handleApproveTx = async (txId) => {
     try {
-      const res = await fetch(`/api/admin/transactions/${txId}/approve`, {
+      const res = await fetch(apiUrl(`/api/admin/transactions/${txId}/approve`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,7 +89,7 @@ const AdminDashboard = ({ onClose }) => {
   // 2. Reject Transaction
   const handleRejectTx = async (txId) => {
     try {
-      const res = await fetch(`/api/admin/transactions/${txId}/reject`, {
+      const res = await fetch(apiUrl(`/api/admin/transactions/${txId}/reject`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -108,7 +109,7 @@ const AdminDashboard = ({ onClose }) => {
   const handleAdjustBalance = async () => {
     if (!balanceAdjustModal) return;
     try {
-      const res = await fetch(`/api/admin/users/${balanceAdjustModal.id}/adjust-balance`, {
+      const res = await fetch(apiUrl(`/api/admin/users/${balanceAdjustModal.id}/adjust-balance`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -132,7 +133,7 @@ const AdminDashboard = ({ onClose }) => {
   // 4. Toggle User Frozen Status
   const handleToggleFreeze = async (userObj) => {
     try {
-      const res = await fetch(`/api/admin/users/${userObj.id}/status`, {
+      const res = await fetch(apiUrl(`/api/admin/users/${userObj.id}/status`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -151,7 +152,7 @@ const AdminDashboard = ({ onClose }) => {
   // 5. Emergency Crash Trigger
   const handleEmergencyCrash = async () => {
     try {
-      const res = await fetch('/api/admin/emergency-crash', {
+      const res = await fetch(apiUrl('/api/admin/emergency-crash'), {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -163,7 +164,7 @@ const AdminDashboard = ({ onClose }) => {
   // 6. Set Next Round Multiplier
   const handleSetNextMultiplier = async () => {
     try {
-      const res = await fetch('/api/admin/set-next-multiplier', {
+      const res = await fetch(apiUrl('/api/admin/set-next-multiplier'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -179,7 +180,7 @@ const AdminDashboard = ({ onClose }) => {
   // 7. Save Settings
   const handleSaveSettings = async () => {
     try {
-      const res = await fetch('/api/admin/settings', {
+      const res = await fetch(apiUrl('/api/admin/settings'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
