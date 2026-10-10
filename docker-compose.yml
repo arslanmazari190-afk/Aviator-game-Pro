@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # 1. PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: aviator_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: aviator_user
+      POSTGRES_PASSWORD: aviator_secure_pass_2026
+      POSTGRES_DB: aviator_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./server/src/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  # 2. Redis In-Memory State Cache
+  redis:
+    image: redis:7-alpine
+    container_name: aviator_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  # 3. Node.js Backend API & Real-time Game Engine
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: aviator_server
+    restart: unless-stopped
+    environment:
+      PORT: 5000
+      NODE_ENV: production
+      DATABASE_URL: postgres://aviator_user:aviator_secure_pass_2026@postgres:5432/aviator_db
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: aviator_production_jwt_secret_key_2026_super_secure
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./server/uploads:/app/uploads
+      - ./server/data:/app/data
+    depends_on:
+      - postgres
+      - redis
+
+  # 4. Frontend Web App (Nginx + React SPA)
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: aviator_client
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+
+volumes:
+  postgres_data:
+  redis_data:
