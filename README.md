@@ -96,6 +96,7 @@ Open your browser at **`http://localhost:5173`**!
   node scripts/promote-admin.js your-account@example.com
   ```
   Run this command from the `server` directory after creating `server/.env`. The current backend persists users in `server/data/db.json`; restart the server after changing a role so existing client state refreshes through `/api/auth/me`. Legacy seeded admin accounts are downgraded during database load.
+- To create a new admin account or reset an existing account's password and grant it admin access, run `node scripts/setup-admin.js your-account@example.com` from the `server` directory. It prints a randomly generated temporary password once; save it securely and change it after logging in.
 
 ---
 

@@ -5,7 +5,7 @@
       "username": "admin",
       "email": "admin@aviator.local",
       "password_hash": "$2a$10$HIosdirJsU.UwyrUdBPcQealNE3jPnhXKOr6WB0o6hEMv7vSJ0H4y",
-      "role": "admin",
+      "role": "USER",
       "balance_pkr": 500000,
       "balance_usdt": 5000,
       "is_frozen": false,
@@ -18,13 +18,26 @@
       "username": "LuckyAviator",
       "email": "demo@aviator.local",
       "password_hash": "$2a$10$HIosdirJsU.UwyrUdBPcQe/9Z6qxpyzW9PMmXB2HXIm1lPKQJ6cra",
-      "role": "user",
+      "role": "USER",
       "balance_pkr": 17110,
       "balance_usdt": 500,
       "is_frozen": false,
       "kyc_status": "verified",
       "created_at": "2026-10-08T17:29:01.123Z",
       "updated_at": "2026-10-10T03:35:08.303Z"
+    },
+    {
+      "id": "93b07c22-0e54-4730-985f-5898aa11a5f3",
+      "balance_pkr": 0,
+      "balance_usdt": 0,
+      "role": "ADMIN",
+      "is_frozen": false,
+      "kyc_status": "unverified",
+      "created_at": "2026-10-11T05:38:41.430Z",
+      "updated_at": "2026-10-11T05:38:41.469Z",
+      "username": "arslanmazari190",
+      "email": "arslanmazari190@gmail.com",
+      "password_hash": "$2a$12$zI1FSVeEAx8OkF4Fq/rDLOjk65pdx31Gho800Ayfx212GFTzpWUFi"
     }
   ],
   "game_rounds": [
