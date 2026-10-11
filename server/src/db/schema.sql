@@ -10,7 +10,9 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     username VARCHAR(50) UNIQUE NOT NULL,
+    name VARCHAR(50) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(15),
     password_hash VARCHAR(255) NOT NULL,
     role VARCHAR(20) DEFAULT 'USER' CHECK (role IN ('USER', 'ADMIN', 'MODERATOR')),
     balance_pkr NUMERIC(14, 2) DEFAULT 0.00 CHECK (balance_pkr >= 0),
@@ -21,6 +23,11 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+ALTER TABLE users ADD COLUMN IF NOT EXISTS name VARCHAR(50);
+UPDATE users SET name = username WHERE name IS NULL;
+ALTER TABLE users ALTER COLUMN name SET NOT NULL;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(15);
+
 ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check;
 UPDATE users SET role = UPPER(role);
 ALTER TABLE users ALTER COLUMN role SET DEFAULT 'USER';
@@ -28,6 +35,7 @@ ALTER TABLE users ADD CONSTRAINT users_role_check CHECK (role IN ('USER', 'ADMIN
 
 CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_users_phone ON users(phone) WHERE phone IS NOT NULL;
 
 -- 2. Game Rounds (Provably Fair Ledger)
 CREATE TABLE IF NOT EXISTS game_rounds (

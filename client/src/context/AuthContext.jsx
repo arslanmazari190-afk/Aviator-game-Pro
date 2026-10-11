@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
+      setLoading(true);
       fetch(apiUrl('/api/auth/me'), {
         headers: { Authorization: `Bearer ${token}` }
       })
@@ -22,11 +23,14 @@ export const AuthProvider = ({ children }) => {
             logout();
           }
         })
-        .catch(() => logout())
+        .catch((error) => {
+          console.error('Failed to restore authenticated session', error);
+          logout();
+        })
         .finally(() => setLoading(false));
     } else {
-      // Auto login as demo user for instant interactive play
-      demoLogin();
+      setUser(null);
+      setLoading(false);
     }
   }, [token]);
 
@@ -49,11 +53,11 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
-  const register = async (username, email, password) => {
+  const register = async (name, email, phone, password) => {
     const res = await fetch(apiUrl('/api/auth/register'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email, password })
+      body: JSON.stringify({ name, email, phone, password })
     });
     const data = await res.json();
     if (data.success) {
@@ -69,8 +73,10 @@ export const AuthProvider = ({ children }) => {
       if (data.success) {
         saveAuth(data.token, data.user);
       }
+      return data;
     } catch (e) {
       console.error('Demo login failed', e);
+      return { success: false, message: 'Failed to connect to the demo account.' };
     } finally {
       setLoading(false);
     }

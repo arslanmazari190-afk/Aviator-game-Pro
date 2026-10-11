@@ -55,7 +55,7 @@ const WithdrawModal = ({ isOpen, onClose }) => {
           amount: numAmount,
           currency: isPKR ? 'PKR' : 'USDT',
           accountNumber,
-          accountTitle: accountTitle || user?.username
+          accountTitle: accountTitle || user?.name || user?.username
         })
       });
 

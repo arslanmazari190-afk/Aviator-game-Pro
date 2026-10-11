@@ -47,7 +47,7 @@ const LiveChat = () => {
       {/* Messages Feed */}
       <div className="flex-1 overflow-y-auto p-3 space-y-2.5">
         {chatMessages.map((msg) => {
-          const isMe = user && msg.username === user.username;
+          const isMe = user && msg.username === (user.name || user.username);
           return (
             <div
               key={msg.id}

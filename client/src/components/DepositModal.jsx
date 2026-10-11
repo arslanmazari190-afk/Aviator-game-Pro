@@ -52,7 +52,7 @@ const DepositModal = ({ isOpen, onClose }) => {
       formData.append('amount', amount);
       formData.append('currency', gateway === 'CRYPTO_USDT' ? 'USDT' : 'PKR');
       formData.append('accountNumber', accountNumber);
-      formData.append('accountTitle', accountTitle || (user ? user.username : ''));
+      formData.append('accountTitle', accountTitle || (user ? user.name || user.username : ''));
       formData.append('txHash', txHash);
       if (receiptFile) {
         formData.append('receipt', receiptFile);

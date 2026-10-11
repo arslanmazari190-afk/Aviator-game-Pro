@@ -163,7 +163,7 @@ io.on('connection', (socket) => {
 
       const chatMsg = db.addChatMessage({
         user_id: user.id,
-        username: user.username,
+        username: user.name || user.username,
         is_admin: user.role === 'ADMIN',
         message: message.trim().substring(0, 200),
         emoji: emoji || null

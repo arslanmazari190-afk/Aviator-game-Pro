@@ -66,7 +66,7 @@ const adminController = {
 
       return res.json({
         success: true,
-        message: `User ${user.username} profile updated successfully.`,
+        message: `User ${user.name || user.username} profile updated successfully.`,
         user: safeUser
       });
     } catch (err) {

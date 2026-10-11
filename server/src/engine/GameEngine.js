@@ -284,7 +284,7 @@ class GameEngine extends EventEmitter {
     const bet = db.createBet({
       round_id: this.currentRound.id,
       user_id: user.id,
-      username: user.username,
+      username: user.name || user.username,
       bet_number: betNumber,
       currency: currency,
       amount: Number(amount),
@@ -299,7 +299,7 @@ class GameEngine extends EventEmitter {
     this.io.emit('bet_placed', {
       id: bet.id,
       userId: user.id,
-      username: user.username,
+      username: user.name || user.username,
       betNumber: bet.bet_number,
       currency: bet.currency,
       amount: bet.amount,

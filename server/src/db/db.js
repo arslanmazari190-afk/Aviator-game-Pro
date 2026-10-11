@@ -54,6 +54,19 @@ class Database {
         changed = true;
       }
 
+      if (!user.name) {
+        user.name = user.username;
+        changed = true;
+      }
+
+      if (user.phone) {
+        const phone = String(user.phone).replace(/\D/g, '');
+        if (user.phone !== phone) {
+          user.phone = phone;
+          changed = true;
+        }
+      }
+
       const email = String(user.email || '').toLowerCase();
       if (email === 'demo@aviator.local' && user.role === 'ADMIN') {
         user.role = 'USER';
@@ -68,7 +81,7 @@ class Database {
 
     if (changed) {
       this.save();
-      console.log('[DB] Migrated user roles and disabled the legacy demo admin account.');
+      console.log('[DB] Migrated user profiles and normalized roles.');
     }
   }
 
@@ -88,6 +101,7 @@ class Database {
     const demoUser = {
       id: uuidv4(),
       username: 'LuckyAviator',
+      name: 'LuckyAviator',
       email: 'demo@aviator.local',
       password_hash: bcrypt.hashSync('demo123', salt),
       role: 'USER',
@@ -236,11 +250,19 @@ class Database {
   }
 
   findUserByEmail(email) {
-    return this.data.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    const normalizedEmail = String(email || '').trim().toLowerCase();
+    return this.data.users.find(u => String(u.email || '').toLowerCase() === normalizedEmail);
   }
 
   findUserByUsername(username) {
-    return this.data.users.find(u => u.username.toLowerCase() === username.toLowerCase());
+    const normalizedUsername = String(username || '').trim().toLowerCase();
+    return this.data.users.find(u => String(u.username || '').toLowerCase() === normalizedUsername);
+  }
+
+  findUserByPhone(phone) {
+    const normalizedPhone = String(phone || '').replace(/\D/g, '');
+    if (!normalizedPhone) return undefined;
+    return this.data.users.find(u => String(u.phone || '').replace(/\D/g, '') === normalizedPhone);
   }
 
   createUser(userData) {

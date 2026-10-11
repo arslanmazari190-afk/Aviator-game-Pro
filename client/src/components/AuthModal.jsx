@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { X, User, Lock, Mail, Sparkles, CheckCircle2, AlertCircle } from 'lucide-react';
+import { X, User, Lock, Mail, Phone, Sparkles, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const AuthModal = ({ isOpen, onClose }) => {
   const { login, register, demoLogin } = useAuth();
   const [tab, setTab] = useState('login'); // 'login' | 'register'
   const [identifier, setIdentifier] = useState('');
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -31,7 +32,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           setErrorMsg(res.message || 'Login failed.');
         }
       } else {
-        const res = await register(username, email, password);
+        const res = await register(name, email, phone, password);
         if (res.success) {
           setSuccessMsg('Account created! Welcome bonus credited.');
           setTimeout(() => onClose(), 800);
@@ -47,8 +48,18 @@ const AuthModal = ({ isOpen, onClose }) => {
   };
 
   const handleDemo = async () => {
-    await demoLogin();
-    onClose();
+    setErrorMsg(null);
+    setLoading(true);
+    try {
+      const result = await demoLogin();
+      if (result?.success) {
+        onClose();
+      } else {
+        setErrorMsg(result?.message || 'Demo login failed.');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -60,7 +71,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-aviator-red to-[#ff4760] flex items-center justify-center text-white shadow-lg">
               <User className="w-5 h-5" />
             </div>
-            <div className="grid grid-cols-1 gap-2">
+            <div>
               <h3 className="font-['Outfit'] font-black text-lg text-white">
                 {tab === 'login' ? 'Player Login' : 'Create Account'}
               </h3>
@@ -78,10 +89,11 @@ const AuthModal = ({ isOpen, onClose }) => {
         {/* Modal Body */}
         <div className="p-4 md:p-6 space-y-4 overflow-y-auto">
           {/* Quick 1-Click Access Buttons */}
-          <div>
+          <div className="grid grid-cols-1 gap-2">
             <button
               type="button"
               onClick={handleDemo}
+              disabled={loading}
               className="w-full p-2.5 rounded-2xl bg-emerald-950/30 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/40 text-xs font-bold flex items-center justify-center gap-1.5 transition-all"
             >
               <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
@@ -126,7 +138,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             {tab === 'login' ? (
               <div>
                 <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                  Username or Email
+                  Email or Phone Number
                 </label>
                 <div className="flex items-center bg-[#090b0e] border border-[#262b3a] rounded-2xl px-3 py-2">
                   <User className="w-4 h-4 text-slate-500 mr-2 shrink-0" />
@@ -134,7 +146,8 @@ const AuthModal = ({ isOpen, onClose }) => {
                     type="text"
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
-                    placeholder="Enter username or email"
+                    placeholder="Enter your email or phone number"
+                    autoComplete="username"
                     required
                     className="w-full bg-transparent text-white text-xs outline-none"
                   />
@@ -144,15 +157,38 @@ const AuthModal = ({ isOpen, onClose }) => {
               <>
                 <div>
                   <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                    Choose Username
+                    Full Name
                   </label>
                   <div className="flex items-center bg-[#090b0e] border border-[#262b3a] rounded-2xl px-3 py-2">
                     <User className="w-4 h-4 text-slate-500 mr-2 shrink-0" />
                     <input
                       type="text"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      placeholder="e.g. AviatorPro"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Enter your full name"
+                      minLength={2}
+                      maxLength={50}
+                      autoComplete="name"
+                      required
+                      className="w-full bg-transparent text-white text-xs outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                    Phone Number
+                  </label>
+                  <div className="flex items-center bg-[#090b0e] border border-[#262b3a] rounded-2xl px-3 py-2">
+                    <Phone className="w-4 h-4 text-slate-500 mr-2 shrink-0" />
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+92 300 1234567"
+                      autoComplete="tel"
+                      minLength={7}
+                      maxLength={20}
                       required
                       className="w-full bg-transparent text-white text-xs outline-none"
                     />
@@ -170,6 +206,8 @@ const AuthModal = ({ isOpen, onClose }) => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="player@example.com"
+                      autoComplete="email"
+                      maxLength={100}
                       required
                       className="w-full bg-transparent text-white text-xs outline-none"
                     />
@@ -189,6 +227,8 @@ const AuthModal = ({ isOpen, onClose }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
+                  autoComplete={tab === 'login' ? 'current-password' : 'new-password'}
+                  minLength={tab === 'register' ? 8 : undefined}
                   required
                   className="w-full bg-transparent text-white text-xs outline-none"
                 />

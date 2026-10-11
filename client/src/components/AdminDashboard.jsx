@@ -194,7 +194,7 @@ const AdminDashboard = ({ onClose }) => {
   };
 
   const filteredUsers = usersList.filter(u =>
-    u.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (u.name || u.username).toLowerCase().includes(searchQuery.toLowerCase()) ||
     u.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -618,7 +618,7 @@ const AdminDashboard = ({ onClose }) => {
                 {filteredUsers.map((u) => (
                   <tr key={u.id} className="hover:bg-[#1b1f2b]/50 transition-colors">
                     <td className="p-3.5">
-                      <div className="font-bold text-white">{u.username}</div>
+                      <div className="font-bold text-white">{u.name || u.username}</div>
                       <div className="text-[11px] text-slate-400 truncate max-w-[160px]">{u.email}</div>
                     </td>
                     <td className="p-3.5">
@@ -681,7 +681,7 @@ const AdminDashboard = ({ onClose }) => {
             <div className="flex items-center justify-between border-b border-[#262b3a] pb-3">
               <div>
                 <h4 className="font-bold text-white text-base">Adjust Player Balance</h4>
-                <p className="text-xs text-slate-400">User: {balanceAdjustModal.username}</p>
+                <p className="text-xs text-slate-400">User: {balanceAdjustModal.name || balanceAdjustModal.username}</p>
               </div>
               <button onClick={() => setBalanceAdjustModal(null)} className="p-1.5 rounded-xl bg-[#1b1f2b] text-slate-400 hover:text-white">
                 <X className="w-4 h-4" />

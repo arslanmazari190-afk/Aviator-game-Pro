@@ -29,6 +29,7 @@ if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
 
     user = db.createUser({
       username,
+      name: username,
       email,
       password_hash,
       role: 'ADMIN',

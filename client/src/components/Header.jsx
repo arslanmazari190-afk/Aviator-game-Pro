@@ -30,6 +30,7 @@ const Header = ({
         ? `₨ ${(user.balance_pkr || 0).toLocaleString('en-PK', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
         : `$ ${(user.balance_usdt || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USDT`)
     : '₨ 0.00';
+  const displayName = user?.name || user?.username || 'Guest';
 
   return (
     <header className="relative min-h-16 bg-[#14171f]/95 border-b border-[#262b3a] px-2 sm:px-3 md:px-6 flex items-center justify-between gap-2 z-30 sticky top-0 backdrop-blur-md">
@@ -163,10 +164,10 @@ const Header = ({
             className="flex items-center gap-2 bg-[#1b1f2b] hover:bg-[#262b3a] border border-[#262b3a] px-2.5 py-1.5 rounded-xl transition-colors"
           >
             <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center text-white font-bold text-xs">
-              {user ? user.username.substring(0, 2).toUpperCase() : 'G'}
+              {user ? displayName.substring(0, 2).toUpperCase() : 'G'}
             </div>
             <span className="hidden xl:inline text-xs font-semibold text-slate-200">
-              {user ? user.username : 'Guest'}
+              {displayName}
             </span>
             <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
           </button>
@@ -177,7 +178,7 @@ const Header = ({
               {user ? (
                 <>
                   <div className="px-3 py-2 border-b border-[#262b3a]">
-                    <div className="text-xs font-bold text-white">{user.username}</div>
+                    <div className="text-xs font-bold text-white">{displayName}</div>
                     <div className="text-[11px] text-slate-400 truncate">{user.email}</div>
                     <div className="mt-1 flex items-center gap-1 text-[10px] text-emerald-400 font-semibold">
                       <Sparkles className="w-3 h-3" /> Role: {user.role.toUpperCase()}
@@ -314,7 +315,7 @@ const Header = ({
               onClick={() => { setMobileMenuOpen(false); logout(); }}
               className="col-span-2 min-h-12 flex items-center gap-2 rounded-xl border border-rose-500/30 bg-rose-950/20 px-3 text-left text-xs font-semibold text-rose-300"
             >
-              <LogOut className="w-4 h-4 shrink-0" /> Log out ({user.username})
+              <LogOut className="w-4 h-4 shrink-0" /> Log out ({displayName})
             </button>
           ) : (
             <>

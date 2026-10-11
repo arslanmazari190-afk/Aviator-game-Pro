@@ -29,12 +29,28 @@ function App() {
     setProvablyFairOpen(true);
   };
 
+  const handleOpenDeposit = () => {
+    if (user) {
+      setDepositOpen(true);
+    } else {
+      setAuthOpen(true);
+    }
+  };
+
+  const handleOpenWithdraw = () => {
+    if (user) {
+      setWithdrawOpen(true);
+    } else {
+      setAuthOpen(true);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#090b0e] text-slate-100 flex flex-col font-sans">
       {/* Top Main Navigation Header */}
       <Header
-        onOpenDeposit={() => setDepositOpen(true)}
-        onOpenWithdraw={() => setWithdrawOpen(true)}
+        onOpenDeposit={handleOpenDeposit}
+        onOpenWithdraw={handleOpenWithdraw}
         onOpenProvablyFair={() => { setSelectedAuditRound(null); setProvablyFairOpen(true); }}
         onOpenHowToPlay={() => setHowToPlayOpen(true)}
         onOpenAuth={() => setAuthOpen(true)}

@@ -91,12 +91,14 @@ Open your browser at **`http://localhost:5173`**!
 ## 🔑 Default Accounts
 
 - **Demo Player:** 1-Click login available on UI or use `demo@aviator.local` / `demo123` (Pre-credited with 50,000 PKR + 500 USDT).
+- **Player accounts:** Register with your full name, email address, phone number, and password. After registration, sign in with your email or phone number and password. Phone numbers are stored in normalized digit-only form and must be unique. Email/SMS one-time-code verification is not configured.
 - There is no default admin account or one-click admin login. Register your own account, then grant it admin access from the server directory:
   ```bash
   node scripts/promote-admin.js your-account@example.com
   ```
   Run this command from the `server` directory after creating `server/.env`. The current backend persists users in `server/data/db.json`; restart the server after changing a role so existing client state refreshes through `/api/auth/me`. Legacy seeded admin accounts are downgraded during database load.
 - To create a new admin account or reset an existing account's password and grant it admin access, run `node scripts/setup-admin.js your-account@example.com` from the `server` directory. It prints a randomly generated temporary password once; save it securely and change it after logging in.
+  On Render, run the same command in the backend service's Shell after deploying the code and attaching persistent storage at `/app/data`. Keep the generated password private; rerunning this command resets that account's password.
 
 ---
 
