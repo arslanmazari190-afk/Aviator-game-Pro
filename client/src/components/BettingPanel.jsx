@@ -258,7 +258,7 @@ const SingleBetWidget = ({ betNumber }) => {
 
 const BettingPanel = () => {
   return (
-    <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 mt-3">
+    <div className="w-full grid grid-cols-1 xl:grid-cols-2 gap-4 mt-3">
       <SingleBetWidget betNumber={1} />
       <SingleBetWidget betNumber={2} />
     </div>

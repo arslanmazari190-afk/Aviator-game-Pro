@@ -58,7 +58,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-      <div className="bg-[#14171f] border border-[#262b3a] rounded-3xl w-full max-w-md overflow-hidden shadow-2xl flex flex-col">
+      <div className="bg-[#14171f] border border-[#262b3a] rounded-3xl w-full max-w-md max-h-[90vh] max-h-[90dvh] overflow-hidden shadow-2xl flex flex-col">
         {/* Header */}
         <div className="p-4 md:p-5 border-b border-[#262b3a] flex items-center justify-between bg-[#0c0e14]">
           <div className="flex items-center gap-2.5">
@@ -81,7 +81,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         </div>
 
         {/* Modal Body */}
-        <div className="p-4 md:p-6 space-y-4">
+        <div className="p-4 md:p-6 space-y-4 overflow-y-auto">
           {/* Quick 1-Click Access Buttons */}
           <div className="grid grid-cols-2 gap-2">
             <button

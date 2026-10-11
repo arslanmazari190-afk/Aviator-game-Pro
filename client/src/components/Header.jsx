@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   Plane, ShieldCheck, HelpCircle, Volume2, VolumeX, 
   Wallet, ArrowUpRight, ArrowDownLeft, ShieldAlert, 
-  User, LogOut, ChevronDown, CheckCircle2, Sparkles
+  User, LogOut, ChevronDown, CheckCircle2, Sparkles, Menu, X
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSound } from '../context/SoundContext';
@@ -23,6 +23,7 @@ const Header = ({
   const { connected } = useGame();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [currencyOpen, setCurrencyOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const formattedBalance = user 
     ? (currency === 'PKR' 
@@ -31,22 +32,22 @@ const Header = ({
     : '₨ 0.00';
 
   return (
-    <header className="h-16 bg-[#14171f]/95 border-b border-[#262b3a] px-3 md:px-6 flex items-center justify-between z-30 sticky top-0 backdrop-blur-md">
+    <header className="relative min-h-16 bg-[#14171f]/95 border-b border-[#262b3a] px-2 sm:px-3 md:px-6 flex items-center justify-between gap-2 z-30 sticky top-0 backdrop-blur-md">
       {/* Brand & Logo */}
-      <div className="flex items-center gap-3 md:gap-6">
+      <div className="flex items-center gap-2 md:gap-6 min-w-0">
         <div 
           onClick={() => setIsAdminView(false)}
-          className="flex items-center gap-2.5 cursor-pointer group"
+          className="flex items-center gap-2 sm:gap-2.5 cursor-pointer group shrink-0"
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-aviator-red to-[#ff4760] flex items-center justify-center shadow-lg shadow-aviator-red/30 group-hover:scale-105 transition-transform duration-200">
-            <Plane className="w-6 h-6 text-white transform -rotate-45" />
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-aviator-red to-[#ff4760] flex items-center justify-center shadow-lg shadow-aviator-red/30 group-hover:scale-105 transition-transform duration-200">
+            <Plane className="w-5 h-5 sm:w-6 sm:h-6 text-white transform -rotate-45" />
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-xl tracking-wider text-white font-['Outfit']">AVIATOR</span>
-              <span className="bg-aviator-red/20 text-aviator-red text-[10px] font-bold px-1.5 py-0.5 rounded border border-aviator-red/30 uppercase tracking-wider">PRO</span>
+              <span className="font-extrabold text-lg sm:text-xl tracking-wider text-white font-['Outfit']">AVIATOR</span>
+              <span className="hidden min-[360px]:inline bg-aviator-red/20 text-aviator-red text-[10px] font-bold px-1.5 py-0.5 rounded border border-aviator-red/30 uppercase tracking-wider">PRO</span>
             </div>
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
+            <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-slate-400">
               <span className={`w-2 h-2 rounded-full ${connected ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`}></span>
               <span>{connected ? 'Live Multiplier' : 'Connecting...'}</span>
             </div>
@@ -54,7 +55,7 @@ const Header = ({
         </div>
 
         {/* Quick Nav Badges */}
-        <div className="hidden lg:flex items-center gap-2">
+        <div className="hidden xl:flex items-center gap-2">
           <button
             onClick={onOpenProvablyFair}
             className="flex items-center gap-1.5 text-xs font-semibold text-slate-300 hover:text-white bg-[#1b1f2b] hover:bg-[#262b3a] px-3 py-1.5 rounded-lg border border-slate-700/50 transition-colors"
@@ -74,7 +75,7 @@ const Header = ({
       </div>
 
       {/* Center / Right Section: Balance, Deposit, Tools & Profile */}
-      <div className="flex items-center gap-2 md:gap-3">
+      <div className="hidden lg:flex items-center gap-2 md:gap-3">
         {/* Currency Switcher & Balance Box */}
         <div className="relative">
           <div 
@@ -225,6 +226,122 @@ const Header = ({
           )}
         </div>
       </div>
+
+      <div className="flex lg:hidden items-center gap-1.5 shrink-0">
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setCurrencyOpen(!currencyOpen)}
+            aria-label={`${currency} wallet: ${formattedBalance}. Change currency`}
+            aria-expanded={currencyOpen}
+            className="h-11 max-w-[112px] flex items-center gap-1.5 rounded-xl border border-[#262b3a] bg-[#090b0e] px-2"
+          >
+            <span className="min-w-0 truncate text-[10px] sm:text-xs font-extrabold text-emerald-400 font-mono">
+              {formattedBalance}
+            </span>
+            <ChevronDown className="w-3.5 h-3.5 shrink-0 text-slate-400" />
+          </button>
+          {currencyOpen && (
+            <div className="absolute right-0 mt-2 w-52 bg-[#14171f] border border-[#262b3a] rounded-xl shadow-2xl py-2 z-50">
+              <div className="px-3 py-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Select Currency</div>
+              <button
+                onClick={() => { setCurrency('PKR'); setCurrencyOpen(false); }}
+                className={`w-full min-h-11 text-left px-3 py-2 text-xs flex items-center justify-between hover:bg-[#1b1f2b] transition-colors ${currency === 'PKR' ? 'text-emerald-400 font-bold' : 'text-slate-300'}`}
+              >
+                <span>Pakistani Rupee (PKR ₨)</span>
+                {currency === 'PKR' && <CheckCircle2 className="w-3.5 h-3.5" />}
+              </button>
+              <button
+                onClick={() => { setCurrency('USDT'); setCurrencyOpen(false); }}
+                className={`w-full min-h-11 text-left px-3 py-2 text-xs flex items-center justify-between hover:bg-[#1b1f2b] transition-colors ${currency === 'USDT' ? 'text-emerald-400 font-bold' : 'text-slate-300'}`}
+              >
+                <span>Tether USD (USDT TRC20)</span>
+                {currency === 'USDT' && <CheckCircle2 className="w-3.5 h-3.5" />}
+              </button>
+            </div>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={mobileMenuOpen}
+          className="h-11 w-11 rounded-xl border border-[#262b3a] bg-[#1b1f2b] text-slate-200 flex items-center justify-center"
+        >
+          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
+      </div>
+
+      {mobileMenuOpen && (
+        <nav aria-label="Main navigation" className="absolute left-2 right-2 top-full mt-2 grid grid-cols-2 gap-2 rounded-2xl border border-[#262b3a] bg-[#14171f] p-3 shadow-2xl lg:hidden">
+          <button
+            onClick={() => { setMobileMenuOpen(false); onOpenProvablyFair(); }}
+            className="min-h-12 flex items-center gap-2 rounded-xl border border-[#262b3a] bg-[#1b1f2b] px-3 text-left text-xs font-semibold text-slate-200"
+          >
+            <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-400" /> Provably Fair
+          </button>
+          <button
+            onClick={() => { setMobileMenuOpen(false); onOpenHowToPlay(); }}
+            className="min-h-12 flex items-center gap-2 rounded-xl border border-[#262b3a] bg-[#1b1f2b] px-3 text-left text-xs font-semibold text-slate-200"
+          >
+            <HelpCircle className="w-4 h-4 shrink-0 text-amber-400" /> How to Play
+          </button>
+          <button
+            onClick={() => { setMobileMenuOpen(false); onOpenDeposit(); }}
+            className="min-h-12 flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-950/30 px-3 text-left text-xs font-semibold text-emerald-300"
+          >
+            <ArrowDownLeft className="w-4 h-4 shrink-0" /> Deposit
+          </button>
+          <button
+            onClick={() => { setMobileMenuOpen(false); onOpenWithdraw(); }}
+            className="min-h-12 flex items-center gap-2 rounded-xl border border-[#262b3a] bg-[#1b1f2b] px-3 text-left text-xs font-semibold text-slate-200"
+          >
+            <ArrowUpRight className="w-4 h-4 shrink-0 text-amber-400" /> Withdraw
+          </button>
+          <button
+            onClick={() => { toggleMute(); }}
+            className="min-h-12 flex items-center gap-2 rounded-xl border border-[#262b3a] bg-[#1b1f2b] px-3 text-left text-xs font-semibold text-slate-200"
+          >
+            {isMuted ? <VolumeX className="w-4 h-4 shrink-0 text-rose-400" /> : <Volume2 className="w-4 h-4 shrink-0 text-emerald-400" />}
+            {isMuted ? 'Unmute Sound' : 'Mute Sound'}
+          </button>
+          <button
+            onClick={() => { setMobileMenuOpen(false); setIsAdminView(!isAdminView); }}
+            className="min-h-12 flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-950/20 px-3 text-left text-xs font-semibold text-amber-300"
+          >
+            <ShieldAlert className="w-4 h-4 shrink-0" /> {isAdminView ? 'Exit Admin' : 'Admin'}
+          </button>
+          {user ? (
+            <button
+              onClick={() => { setMobileMenuOpen(false); logout(); }}
+              className="col-span-2 min-h-12 flex items-center gap-2 rounded-xl border border-rose-500/30 bg-rose-950/20 px-3 text-left text-xs font-semibold text-rose-300"
+            >
+              <LogOut className="w-4 h-4 shrink-0" /> Log out ({user.username})
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={() => { setMobileMenuOpen(false); onOpenAuth(); }}
+                className="min-h-12 flex items-center gap-2 rounded-xl border border-[#262b3a] bg-[#1b1f2b] px-3 text-left text-xs font-semibold text-slate-200"
+              >
+                <User className="w-4 h-4 shrink-0 text-blue-400" /> Login / Register
+              </button>
+              <button
+                onClick={() => { setMobileMenuOpen(false); demoLogin(); }}
+                className="min-h-12 flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-950/30 px-3 text-left text-xs font-semibold text-emerald-300"
+              >
+                <Sparkles className="w-4 h-4 shrink-0" /> Demo Account
+              </button>
+              <button
+                onClick={() => { setMobileMenuOpen(false); adminLogin(); }}
+                className="col-span-2 min-h-12 flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-950/20 px-3 text-left text-xs font-semibold text-amber-300"
+              >
+                <ShieldAlert className="w-4 h-4 shrink-0" /> 1-Click Admin Access
+              </button>
+            </>
+          )}
+        </nav>
+      )}
     </header>
   );
 };

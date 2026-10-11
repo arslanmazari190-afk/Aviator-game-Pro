@@ -2,8 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 :root {
   color-scheme: dark;
+  font-size: clamp(14px, 0.25vw + 13px, 16px);
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
 }
 
 body {
@@ -14,8 +28,26 @@ body {
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow-x: clip;
   user-select: none;
+}
+
+img,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+button {
+  touch-action: manipulation;
 }
 
 /* Custom Scrollbars */
@@ -99,4 +131,41 @@ body {
 
 .animate-spin-fast {
   animation: spin-propeller 0.08s linear infinite;
+}
+
+@media (max-width: 639px) {
+  button {
+    min-height: 48px;
+  }
+
+  label:has(input[type='checkbox']) {
+    min-height: 44px;
+  }
+
+  input[type='checkbox'] {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 479px) {
+  main {
+    min-width: 0;
+  }
+
+  .min-w-0,
+  [class*='grid'] > * {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .text-6xl {
+    font-size: clamp(2.5rem, 12vw, 3.75rem);
+  }
+
+  .text-5xl {
+    font-size: clamp(2.25rem, 11vw, 3rem);
+  }
 }
