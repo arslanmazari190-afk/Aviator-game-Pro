@@ -44,7 +44,7 @@ const authController = {
         username,
         email,
         password_hash,
-        role: 'user',
+        role: 'USER',
         balance_pkr: 5000.00, // Welcome bonus 5,000 PKR for instant play!
         balance_usdt: 20.00   // Welcome bonus 20 USDT
       });
@@ -119,9 +119,9 @@ const authController = {
   // Instant 1-Click Demo Login
   demoLogin: (req, res) => {
     try {
-      let demoUser = db.findUserByEmail('demo@aviator.local');
-      if (!demoUser) {
-        demoUser = db.data.users[1] || db.data.users[0];
+      const demoUser = db.findUserByEmail('demo@aviator.local');
+      if (!demoUser || demoUser.role !== 'USER' || demoUser.is_frozen) {
+        return res.status(404).json({ success: false, message: 'Demo account is unavailable.' });
       }
       const token = generateToken(demoUser);
       const { password_hash: _, ...safeUser } = demoUser;
@@ -137,26 +137,6 @@ const authController = {
     }
   },
 
-  // Instant 1-Click Admin Login (for demonstration and management)
-  adminLogin: (req, res) => {
-    try {
-      let adminUser = db.findUserByEmail('admin@aviator.local');
-      if (!adminUser) {
-        adminUser = db.data.users.find(u => u.role === 'admin');
-      }
-      const token = generateToken(adminUser);
-      const { password_hash: _, ...safeUser } = adminUser;
-
-      return res.json({
-        success: true,
-        message: 'Admin account authorized.',
-        token,
-        user: safeUser
-      });
-    } catch (err) {
-      return res.status(500).json({ success: false, message: 'Error loading admin user.' });
-    }
-  }
 };
 
 module.exports = authController;

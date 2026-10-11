@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { X, User, Lock, Mail, Sparkles, ShieldAlert, CheckCircle2, AlertCircle } from 'lucide-react';
+import { X, User, Lock, Mail, Sparkles, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const AuthModal = ({ isOpen, onClose }) => {
-  const { login, register, demoLogin, adminLogin } = useAuth();
+  const { login, register, demoLogin } = useAuth();
   const [tab, setTab] = useState('login'); // 'login' | 'register'
   const [identifier, setIdentifier] = useState('');
   const [username, setUsername] = useState('');
@@ -51,11 +51,6 @@ const AuthModal = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  const handleAdmin = async () => {
-    await adminLogin();
-    onClose();
-  };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
       <div className="bg-[#14171f] border border-[#262b3a] rounded-3xl w-full max-w-md max-h-[90vh] max-h-[90dvh] overflow-hidden shadow-2xl flex flex-col">
@@ -65,7 +60,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-aviator-red to-[#ff4760] flex items-center justify-center text-white shadow-lg">
               <User className="w-5 h-5" />
             </div>
-            <div>
+            <div className="grid grid-cols-1 gap-2">
               <h3 className="font-['Outfit'] font-black text-lg text-white">
                 {tab === 'login' ? 'Player Login' : 'Create Account'}
               </h3>
@@ -83,23 +78,14 @@ const AuthModal = ({ isOpen, onClose }) => {
         {/* Modal Body */}
         <div className="p-4 md:p-6 space-y-4 overflow-y-auto">
           {/* Quick 1-Click Access Buttons */}
-          <div className="grid grid-cols-2 gap-2">
+          <div>
             <button
               type="button"
               onClick={handleDemo}
-              className="p-2.5 rounded-2xl bg-emerald-950/30 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/40 text-xs font-bold flex items-center justify-center gap-1.5 transition-all"
+              className="w-full p-2.5 rounded-2xl bg-emerald-950/30 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/40 text-xs font-bold flex items-center justify-center gap-1.5 transition-all"
             >
               <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
               <span>1-Click Demo</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={handleAdmin}
-              className="p-2.5 rounded-2xl bg-amber-950/30 border border-amber-500/40 text-amber-300 hover:bg-amber-900/40 text-xs font-bold flex items-center justify-center gap-1.5 transition-all"
-            >
-              <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
-              <span>1-Click Admin</span>
             </button>
           </div>
 

@@ -11,10 +11,11 @@ import ProvablyFairModal from './components/ProvablyFairModal';
 import HowToPlayModal from './components/HowToPlayModal';
 import AuthModal from './components/AuthModal';
 import AdminDashboard from './components/AdminDashboard';
+import ProtectedRoute from './components/ProtectedRoute';
 import { useAuth } from './context/AuthContext';
 
 function App() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [isAdminView, setIsAdminView] = useState(false);
   const [depositOpen, setDepositOpen] = useState(false);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
@@ -44,9 +45,15 @@ function App() {
 
       {/* Main View Router */}
       {isAdminView ? (
-        <main className="flex-1">
-          <AdminDashboard onClose={() => setIsAdminView(false)} />
-        </main>
+        <ProtectedRoute
+          user={user}
+          loading={authLoading}
+          onUnauthorized={() => setIsAdminView(false)}
+        >
+          <main className="flex-1">
+            <AdminDashboard onClose={() => setIsAdminView(false)} />
+          </main>
+        </ProtectedRoute>
       ) : (
         <main className="flex-1 flex flex-col max-w-[1600px] w-full mx-auto px-2 md:px-4 py-2 md:py-3 space-y-2.5">
           {/* Multipliers Ribbon */}

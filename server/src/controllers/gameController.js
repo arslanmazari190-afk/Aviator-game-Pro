@@ -88,7 +88,7 @@ const gameController = {
       const chatMsg = db.addChatMessage({
         user_id: user.id,
         username: user.username,
-        is_admin: user.role === 'admin',
+        is_admin: user.role === 'ADMIN',
         message: message.trim().substring(0, 200),
         emoji: emoji || null
       });

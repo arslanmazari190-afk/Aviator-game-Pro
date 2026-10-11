@@ -76,15 +76,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const adminLogin = async () => {
-    const res = await fetch(apiUrl('/api/auth/admin-login'), { method: 'POST' });
-    const data = await res.json();
-    if (data.success) {
-      saveAuth(data.token, data.user);
-    }
-    return data;
-  };
-
   const logout = () => {
     localStorage.removeItem('aviator_token');
     setToken(null);
@@ -118,7 +109,6 @@ export const AuthProvider = ({ children }) => {
       login,
       register,
       demoLogin,
-      adminLogin,
       logout,
       updateBalanceLocally,
       setCurrency: switchCurrency

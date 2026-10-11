@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
-    role VARCHAR(20) DEFAULT 'user' CHECK (role IN ('user', 'admin', 'moderator')),
+    role VARCHAR(20) DEFAULT 'USER' CHECK (role IN ('USER', 'ADMIN', 'MODERATOR')),
     balance_pkr NUMERIC(14, 2) DEFAULT 0.00 CHECK (balance_pkr >= 0),
     balance_usdt NUMERIC(14, 4) DEFAULT 0.0000 CHECK (balance_usdt >= 0),
     is_frozen BOOLEAN DEFAULT FALSE,
@@ -20,6 +20,11 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check;
+UPDATE users SET role = UPPER(role);
+ALTER TABLE users ALTER COLUMN role SET DEFAULT 'USER';
+ALTER TABLE users ADD CONSTRAINT users_role_check CHECK (role IN ('USER', 'ADMIN', 'MODERATOR'));
 
 CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);

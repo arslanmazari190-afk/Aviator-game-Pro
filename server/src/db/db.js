@@ -30,6 +30,7 @@ class Database {
       try {
         const raw = fs.readFileSync(DB_FILE, 'utf-8');
         this.data = JSON.parse(raw);
+        this.migrateUserRoles();
         console.log('[DB] Successfully loaded persistent database.');
       } catch (err) {
         console.error('[DB] Error parsing existing db.json, creating new DB:', err);
@@ -37,6 +38,37 @@ class Database {
       }
     } else {
       this.seedInitialData();
+    }
+  }
+
+  migrateUserRoles() {
+    let changed = false;
+    for (const user of this.data.users || []) {
+      const normalizedRole = String(user.role || 'USER').toUpperCase();
+      const role = ['USER', 'ADMIN', 'MODERATOR'].includes(normalizedRole)
+        ? normalizedRole
+        : 'USER';
+
+      if (user.role !== role) {
+        user.role = role;
+        changed = true;
+      }
+
+      const email = String(user.email || '').toLowerCase();
+      if (email === 'demo@aviator.local' && user.role === 'ADMIN') {
+        user.role = 'USER';
+        changed = true;
+      }
+
+      if (email === 'admin@aviator.local' && user.username === 'admin' && user.role === 'ADMIN') {
+        user.role = 'USER';
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      this.save();
+      console.log('[DB] Migrated user roles and disabled the legacy demo admin account.');
     }
   }
 
@@ -52,28 +84,13 @@ class Database {
     console.log('[DB] Seeding initial game database...');
     const salt = bcrypt.genSaltSync(10);
 
-    // 1. Admin User
-    const adminUser = {
-      id: uuidv4(),
-      username: 'admin',
-      email: 'admin@aviator.local',
-      password_hash: bcrypt.hashSync('admin123', salt),
-      role: 'admin',
-      balance_pkr: 500000.00,
-      balance_usdt: 5000.00,
-      is_frozen: false,
-      kyc_status: 'verified',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
-
-    // 2. Demo User
+    // Demo User
     const demoUser = {
       id: uuidv4(),
       username: 'LuckyAviator',
       email: 'demo@aviator.local',
       password_hash: bcrypt.hashSync('demo123', salt),
-      role: 'user',
+      role: 'USER',
       balance_pkr: 50000.00,
       balance_usdt: 500.00,
       is_frozen: false,
@@ -82,7 +99,7 @@ class Database {
       updated_at: new Date().toISOString()
     };
 
-    this.data.users = [adminUser, demoUser];
+    this.data.users = [demoUser];
 
     // 3. Generate 25 Realistic Previous Game Rounds with Provably Fair hashes
     this.data.game_rounds = [];
@@ -231,7 +248,7 @@ class Database {
       id: uuidv4(),
       balance_pkr: 0.00,
       balance_usdt: 0.00,
-      role: 'user',
+      role: 'USER',
       is_frozen: false,
       kyc_status: 'unverified',
       created_at: new Date().toISOString(),

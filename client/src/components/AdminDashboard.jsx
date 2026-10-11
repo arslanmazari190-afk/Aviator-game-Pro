@@ -622,7 +622,7 @@ const AdminDashboard = ({ onClose }) => {
                       <div className="text-[11px] text-slate-400 truncate max-w-[160px]">{u.email}</div>
                     </td>
                     <td className="p-3.5">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${u.role === 'admin' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'bg-slate-800 text-slate-300'}`}>
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${u.role === 'ADMIN' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'bg-slate-800 text-slate-300'}`}>
                         {u.role}
                       </span>
                     </td>

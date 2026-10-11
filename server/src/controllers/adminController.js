@@ -47,7 +47,19 @@ const adminController = {
       const updates = {};
       if (typeof is_frozen === 'boolean') updates.is_frozen = is_frozen;
       if (kyc_status) updates.kyc_status = kyc_status;
-      if (role) updates.role = role;
+      if (role !== undefined) {
+        const normalizedRole = String(role).toUpperCase();
+        if (!['USER', 'ADMIN', 'MODERATOR'].includes(normalizedRole)) {
+          return res.status(400).json({ success: false, message: 'Invalid user role.' });
+        }
+        if (
+          normalizedRole === 'ADMIN' &&
+          ['demo@aviator.local', 'admin@aviator.local'].includes(user.email.toLowerCase())
+        ) {
+          return res.status(400).json({ success: false, message: 'Built-in demo accounts cannot be admins.' });
+        }
+        updates.role = normalizedRole;
+      }
 
       const updated = db.updateUser(id, updates);
       const { password_hash: _, ...safeUser } = updated;

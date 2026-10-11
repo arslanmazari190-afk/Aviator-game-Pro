@@ -66,7 +66,14 @@ cd server && npm install
 cd ../client && npm install
 ```
 
-### 2. Run Locally
+### 2. Configure the backend signing key
+The backend requires a private `JWT_SECRET` of at least 32 characters and will not start with a built-in default. Generate a strong key with:
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+Put the generated value in `server/.env` as `JWT_SECRET=<generated-value>`. For Docker Compose, set the same variable in the root `.env` file or your shell environment. Changing this key invalidates previously issued login tokens.
+
+### 3. Run Locally
 In terminal 1 (Start Backend Server):
 ```bash
 npm run server
@@ -84,7 +91,11 @@ Open your browser at **`http://localhost:5173`**!
 ## 🔑 Default Accounts
 
 - **Demo Player:** 1-Click login available on UI or use `demo@aviator.local` / `demo123` (Pre-credited with 50,000 PKR + 500 USDT).
-- **Admin Operator:** 1-Click access available or use `admin@aviator.local` / `admin123` (Access Backoffice via header "Admin" button).
+- There is no default admin account or one-click admin login. Register your own account, then grant it admin access from the server directory:
+  ```bash
+  node scripts/promote-admin.js your-account@example.com
+  ```
+  Run this command from the `server` directory after creating `server/.env`. The current backend persists users in `server/data/db.json`; restart the server after changing a role so existing client state refreshes through `/api/auth/me`. Legacy seeded admin accounts are downgraded during database load.
 
 ---
 

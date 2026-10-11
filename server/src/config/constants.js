@@ -1,8 +1,15 @@
 const path = require('path');
 
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
+
+const jwtSecret = process.env.JWT_SECRET;
+if (!jwtSecret || Buffer.byteLength(jwtSecret, 'utf8') < 32) {
+  throw new Error('JWT_SECRET must be configured with at least 32 characters.');
+}
+
 module.exports = {
   PORT: process.env.PORT || 5000,
-  JWT_SECRET: process.env.JWT_SECRET || 'aviator_super_secure_jwt_secret_key_2026',
+  JWT_SECRET: jwtSecret,
   JWT_EXPIRY: '7d',
   
   // Game Loop Timings (milliseconds)

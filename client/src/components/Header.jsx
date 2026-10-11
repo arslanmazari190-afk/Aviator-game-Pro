@@ -18,7 +18,7 @@ const Header = ({
   isAdminView,
   setIsAdminView
 }) => {
-  const { user, currency, setCurrency, logout, demoLogin, adminLogin } = useAuth();
+  const { user, currency, setCurrency, logout, demoLogin } = useAuth();
   const { isMuted, toggleMute } = useSound();
   const { connected } = useGame();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -145,14 +145,16 @@ const Header = ({
         </button>
 
         {/* Admin Dashboard Switcher Button */}
-        <button
-          onClick={() => setIsAdminView(!isAdminView)}
-          title="Toggle Admin Backoffice"
-          className={`p-2 rounded-xl border flex items-center gap-1.5 text-xs font-bold transition-all ${isAdminView ? 'bg-amber-500 text-black border-amber-400 shadow-lg shadow-amber-500/30' : 'bg-[#1b1f2b] border-amber-500/40 text-amber-400 hover:bg-amber-500/10'}`}
-        >
-          <ShieldAlert className="w-4 h-4" />
-          <span className="hidden md:inline">{isAdminView ? 'Exit Admin' : 'Admin'}</span>
-        </button>
+        {user?.role === 'ADMIN' && (
+          <button
+            onClick={() => isAdminView ? setIsAdminView(false) : onOpenAdmin()}
+            title="Toggle Admin Backoffice"
+            className={`p-2 rounded-xl border flex items-center gap-1.5 text-xs font-bold transition-all ${isAdminView ? 'bg-amber-500 text-black border-amber-400 shadow-lg shadow-amber-500/30' : 'bg-[#1b1f2b] border-amber-500/40 text-amber-400 hover:bg-amber-500/10'}`}
+          >
+            <ShieldAlert className="w-4 h-4" />
+            <span className="hidden md:inline">{isAdminView ? 'Exit Admin' : 'Admin'}</span>
+          </button>
+        )}
 
         {/* User Profile Menu */}
         <div className="relative">
@@ -213,12 +215,6 @@ const Header = ({
                     className="w-full text-left px-3 py-2 text-xs text-emerald-400 hover:bg-[#1b1f2b] flex items-center gap-2"
                   >
                     <Sparkles className="w-3.5 h-3.5" /> 1-Click Demo Account (PKR 50k)
-                  </button>
-                  <button
-                    onClick={() => { setDropdownOpen(false); adminLogin(); }}
-                    className="w-full text-left px-3 py-2 text-xs text-amber-400 hover:bg-[#1b1f2b] flex items-center gap-2 border-t border-[#262b3a] mt-1"
-                  >
-                    <ShieldAlert className="w-3.5 h-3.5" /> 1-Click Admin Access
                   </button>
                 </>
               )}
@@ -305,12 +301,14 @@ const Header = ({
             {isMuted ? <VolumeX className="w-4 h-4 shrink-0 text-rose-400" /> : <Volume2 className="w-4 h-4 shrink-0 text-emerald-400" />}
             {isMuted ? 'Unmute Sound' : 'Mute Sound'}
           </button>
-          <button
-            onClick={() => { setMobileMenuOpen(false); setIsAdminView(!isAdminView); }}
-            className="min-h-12 flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-950/20 px-3 text-left text-xs font-semibold text-amber-300"
-          >
-            <ShieldAlert className="w-4 h-4 shrink-0" /> {isAdminView ? 'Exit Admin' : 'Admin'}
-          </button>
+          {user?.role === 'ADMIN' && (
+            <button
+              onClick={() => { setMobileMenuOpen(false); isAdminView ? setIsAdminView(false) : onOpenAdmin(); }}
+              className="min-h-12 flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-950/20 px-3 text-left text-xs font-semibold text-amber-300"
+            >
+              <ShieldAlert className="w-4 h-4 shrink-0" /> {isAdminView ? 'Exit Admin' : 'Admin'}
+            </button>
+          )}
           {user ? (
             <button
               onClick={() => { setMobileMenuOpen(false); logout(); }}
@@ -331,12 +329,6 @@ const Header = ({
                 className="min-h-12 flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-950/30 px-3 text-left text-xs font-semibold text-emerald-300"
               >
                 <Sparkles className="w-4 h-4 shrink-0" /> Demo Account
-              </button>
-              <button
-                onClick={() => { setMobileMenuOpen(false); adminLogin(); }}
-                className="col-span-2 min-h-12 flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-950/20 px-3 text-left text-xs font-semibold text-amber-300"
-              >
-                <ShieldAlert className="w-4 h-4 shrink-0" /> 1-Click Admin Access
               </button>
             </>
           )}

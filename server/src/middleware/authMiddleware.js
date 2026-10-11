@@ -28,8 +28,8 @@ function authenticate(req, res, next) {
   }
 }
 
-function requireAdmin(req, res, next) {
-  if (!req.user || req.user.role !== 'admin') {
+function isAdmin(req, res, next) {
+  if (!req.user || req.user.role !== 'ADMIN') {
     return res.status(403).json({ success: false, message: 'Access denied: Admin privileges required.' });
   }
   next();
@@ -37,5 +37,5 @@ function requireAdmin(req, res, next) {
 
 module.exports = {
   authenticate,
-  requireAdmin
+  isAdmin
 };
