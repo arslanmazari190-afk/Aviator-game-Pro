@@ -267,7 +267,7 @@ const GameCanvas = () => {
   };
 
   return (
-    <div className="relative w-full h-[clamp(260px,68vw,340px)] md:h-[440px] lg:h-[480px] bg-[#0c0e14] rounded-2xl overflow-hidden border border-[#262b3a] shadow-2xl flex items-center justify-center select-none">
+    <div className="relative w-full h-[clamp(260px,68vw,340px)] md:h-[440px] lg:h-[clamp(200px,calc(100dvh-430px),480px)] bg-[#0c0e14] rounded-2xl overflow-hidden border border-[#262b3a] shadow-2xl flex items-center justify-center select-none">
       {/* 60FPS Trajectory Canvas */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 
